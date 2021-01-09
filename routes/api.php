@@ -22,3 +22,7 @@ Route::post("user-signup", "UserController@userSignUp");
 Route::post("user-login", "UserController@userLogin");
 
 Route::get("user/{email}", "UserController@userDetail");
+
+Route::post("recipes/create", "RecipeController@store");
+
+Route::get("recipes", "RecipeController@index");
