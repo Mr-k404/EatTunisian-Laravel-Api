@@ -24,5 +24,10 @@ Route::post("user-login", "UserController@userLogin");
 Route::get("user/{email}", "UserController@userDetail");
 
 Route::post("recipes/create", "RecipeController@store");
-
 Route::get("recipes", "RecipeController@index");
+
+
+
+Route::get("ingredient", "IngredientController@index");
+Route::post("ingredient/delete/{id}", "IngredientController@destroy");
+Route::post("ingredient/creat", "IngredientController@store");

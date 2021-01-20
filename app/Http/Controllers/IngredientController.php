@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Ingredient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class IngredientController extends Controller
 {
+
+    private $status_code    =        200;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,16 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        //
+        $ingredient = Ingredient::all();
+        //dd($recipe);
+        //dd($allRecips);
+        if(!is_null($ingredient)) {
+            return response()->json(["status" => $this->status_code, "success" => true, "message" => "Ingredient was fatched successfully", "data" => $ingredient]);
+        }
+
+    else {
+        return response()->json(["status" => "failed", "success" => false, "message" => "failed to fatch the Ingredient"]);
+    }
     }
 
     /**
@@ -35,7 +48,52 @@ class IngredientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // $validator              =        Validator::make($request->all(), [
+        //     "name"                     =>          "required",
+        //     "file"                     =>          "required|mimes:jpeg,jpg,png|",
+        // ]);
+
+        // if($validator->fails()) {
+        //     return response()->json(["status" => "failed", "message" => "validation_error", "errors" => $validator->errors()]);
+        // }
+
+        $name                   =       $request->name;
+     
+        
+
+        if($request->get('file'))
+       {
+          $image = $request->get('file');
+          dd($image);
+          $img = \Image::make($image)->resize(300, 200);
+          //$ext = pathinfo(storage_path().$image, PATHINFO_EXTENSION);
+          $ext = $image->getClientOriginalExtension();
+          $filename = time().'.' .  $ext;
+          //dd($ext);
+          $path = public_path('images') .'/'. $filename;
+         // dd( $path);
+         $img->save($path, 90);
+//\Image::make($request->file('file'))->save(.$filenames);
+        }
+
+        $ingredientDataArray          =       array(
+            "name"              =>          $name,
+            "img"              =>           $filename
+       
+        );
+
+        $ingredient                   =           Ingredient::create($ingredientDataArray);
+
+       
+
+        if(!is_null($ingredient)) {
+            return response()->json(["status" => $this->status_code, "success" => true, "message" => "Ingredient was created successfully", "data" => $ingredient]);
+        }
+
+        else {
+            return response()->json(["status" => "failed", "success" => false, "message" => "failed to add the Ingredient"]);
+        }
     }
 
     /**
@@ -72,14 +130,24 @@ class IngredientController extends Controller
         //
     }
 
+    
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Ingredient  $ingredient
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Ingredient $ingredient)
+    public function destroy($id)
     {
-        //
+        $ingredient = Ingredient::find($id);
+        $ingredient->delete();
+        if(!is_null($ingredient)) {
+            return response()->json(["status" => $this->status_code, "success" => true, "message" => "Ingredient was deleted successfully", "data" => $ingredient]);
+        }
+
+    else {
+        return response()->json(["status" => "failed", "success" => false, "message" => "failed to delet the Ingredient"]);
+    }
+
     }
 }

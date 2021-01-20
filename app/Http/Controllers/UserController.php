@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     private $status_code    =        200;
+    private $isLogedin    =        false;
 
     public function userSignUp(Request $request) {
         $validator              =        Validator::make($request->all(), [
@@ -85,8 +86,8 @@ class UserController extends Controller
             // if password is correct
             if(!is_null($password_status)) {
                 $user           =       $this->userDetail($request->email);
-
-                return response()->json(["status" => $this->status_code, "success" => true, "message" => "You have logged in successfully", "data" => $user]);
+                    $isLogedin=true;
+                return response()->json(["status" => $this->status_code, "success" => true, "message" => "You have logged in successfully", "data" => $user,"isLogedin" => $isLogedin]);
             }
 
             else {
