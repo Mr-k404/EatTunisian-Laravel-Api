@@ -65,16 +65,9 @@ class IngredientController extends Controller
         if($request->get('file'))
        {
           $image = $request->get('file');
-          dd($image);
-          $img = \Image::make($image)->resize(300, 200);
-          //$ext = pathinfo(storage_path().$image, PATHINFO_EXTENSION);
-          $ext = $image->getClientOriginalExtension();
-          $filename = time().'.' .  $ext;
-          //dd($ext);
-          $path = public_path('images') .'/'. $filename;
-         // dd( $path);
-         $img->save($path, 90);
-//\Image::make($request->file('file'))->save(.$filenames);
+          $image = $request->get('file');
+          $filename = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+          \Image::make($request->get('file'))->save(public_path('images/').$filename);
         }
 
         $ingredientDataArray          =       array(
